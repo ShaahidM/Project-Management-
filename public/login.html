@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login page</title>
+    <script src="script.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <link rel="stylesheet" href="login.css">
+    <link href="tailwind-output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="icon">
+            <span class="logo">TaskFlow</span>
+        </div>
+        <div class="light-mode-btn">
+            <div class="light-mode-button">
+                <label for="toggleButton">
+                    <input type="checkbox" id="toggleButton">
+                    <div class="switch"></div>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="login-main">
+        <div class="login-box w-4/12">
+            <div class="text-center w-full pb-8 lg:pb-14">
+                <span class="text-2xl mb-4 font-semibold">Login</span>
+            </div>
+
+            <div class="login-content w-full">
+                <div class="login-input flex flex-col mt-5 gap-2">
+                    <label for="f_name" class="mb-1 text-sm font-semibold">Username</label>
+                    <div class="input-box flex items-center">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="login-username" placeholder="Type your username" class="border-none w-full rounded-md py-2 bg-transparent focus:outline-none pl-3"/>
+                    </div>
+                </div>
+                <div class="login-input flex flex-col mt-5 gap-2">
+                    <label for="password" class="mb-1 text-sm font-semibold">Password</label>
+                    <div class="input-box flex items-center">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="login-password" placeholder="Type your password" class="border-none border-t-2 w-full rounded-md py-2 bg-transparent focus:outline-none pl-3">
+                        <button type="button" id="togglePassword" class="far fa-eye-slash" onclick="togglePasswordVisibility()"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="login-btn mt-5 rounded-md">
+                <button class="w-full py-3 text-center" onclick="checkLoginCredentials()">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var lightModeSwitch = document.querySelector("#toggleButton");
+
+        lightModeSwitch.addEventListener("click", function(){
+            document.querySelector("body").classList.toggle("light-mode");
+        });
+    </script>
+</body>
+</html>

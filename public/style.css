@@ -1,0 +1,3070 @@
+:root {
+    --primary-bg-color: #121212;
+    --secondary-bg-color: #1F1F1F;
+    --primary-text-color: #ffffff;
+    --task-text-color: #d3d3d3;
+    --placeholder-text-color: #7f8fa6;
+
+    --popup-bg-color: #333;
+    --popup-input-bg: #444;
+    --popup-shadow: #555;
+    --password-bg-color: #252525;
+    --dashboard-bg-color:#252525;
+
+    --primary-button-bgColor: #ffffff;
+    --primary-button-textColor: #232323;
+}
+
+.light-mode {
+    --primary-bg-color: #F9F8FB;
+    --secondary-bg-color: #dedcd9;
+    --primary-text-color: #35362f;
+    --secondary-text-color: #71716f;
+    --task-text-color: #35362f;
+    --password-bg-color: #b1b0b0;
+    --dashboard-bg-color:#F9F8FB;
+
+    --popup-bg-color: #e4e4e2;
+    --popup-input-bg: #cdcccc;
+    --popup-shadow: #d3d3d3;
+
+    --primary-button-bgColor: #121212;
+    --primary-button-textColor: #bebebe;
+    --primary-button-textHover: #eee;
+}
+
+body {
+    background-color: var(--primary-bg-color);
+    color: var(--primary-text-color);
+    font-family: "Inter";
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+
+.light-mode-button i {
+    font-size: 40px;
+    color: #7f8fa6;
+    text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.light-mode-button input {
+    display: none;
+}
+
+.switch {
+    display: inline-block;
+    height: 40px;
+    width: 100px;
+    background-color: #fff;
+    border-radius: 40px;
+    margin: 0 5px;
+    box-shadow: 1px 2px 2px 0 rgba(0, 0, 0, 0.2);
+    position: relative;
+    transition: all 0.5s;
+}
+
+.switch::after {
+    content: "";
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    background-color: #000;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    box-shadow: 1px 2px 2px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.5s;
+}
+
+.material-icons--flip {
+    transform: scaleX(-1) rotateZ(35deg);
+}
+
+.light-mode-button input:checked + .switch::after {
+    left: 65px;
+    background-color: #fff;
+}
+
+.light-mode .switch {
+    background-color: #000;
+}
+
+.light-mode i {
+    color: #d1d8e0;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+
+/* For popup - dims background */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 999; /* Ensure it is below the popup but above other content */
+}
+
+/* For edit - dims popup too */
+.popupoverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 1001; /* Ensure it is above the popup but below other content */
+}
+
+.sidebar {
+    width: 180px;
+    background-color: var(--secondary-bg-color);
+    height: 100vh;
+    padding: 20px;
+    position: fixed;
+    z-index: 2; /* Ensure sidebar is above the top bar */
+}
+
+.sidebar-logo {
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+.logo {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.sidebar-options {
+    display: flex;
+    flex-direction: column;
+}
+
+.icon-spacing {
+    margin-right: 8px; /* Icon and Text gap */
+}
+
+.filter-button {
+    background-color: transparent;
+    color: white;
+    border: none;
+    font-size: 18px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.nav-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-item {
+    background-color: transparent;
+    width: 160px; 
+    color: var(--secondary-text-color);
+    border: none;
+    font-size: 18px;
+    margin: 10px 0;
+    cursor: pointer;
+    text-align: left;
+    border-radius: 10px; 
+    display: flex; 
+    align-items: center; 
+    padding: 10px 20px; 
+    margin-left: -10px;
+    transition: background-color 0.3s ease;
+}
+
+.menu-item:hover {
+    background-color: #444;
+}
+
+.menu-item.active {
+    width: 160px; 
+    background-color: #444; 
+    color: #fff; 
+    font-weight: bold; 
+    border-radius: 10px; 
+    padding: 10px 20px; 
+    margin: 5px 0; 
+    margin-left: -10px;
+    transition: background-color 0.3s ease; 
+}
+
+.menu-item.active:hover {
+    background-color: #555; 
+}
+
+.top-bar {
+    width: 100%;
+    height: 70px; 
+    background-color: var(--secondary-bg-color);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1; /* Ensure top bar is behind the sidebar and above the task cards */
+}
+
+.top-bar-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 7px;
+    margin-right: 60px; /* Add margin to move buttons to the left to not be hidden by scroll bar */
+}
+
+.top-bar-button {
+    border: 1px solid wheat;
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between icon and text */
+}
+
+.top-bar-button:hover {
+    background-color: #555;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #555;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+/* Style for the labels inside the dropdown */
+.dropdown-content label {
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: 5px
+}
+
+.dropdown-content label:hover {
+    background-color: #555;
+}
+
+/* Style for the checkboxes */
+.dropdown-content input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.canvas {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 70px 20px 20px 200px; /* Adjust padding to account for the top bar and side bar */
+    overflow-y: auto;
+    background-color: var(--primary-bg-color);
+    z-index: 0; /* Ensure canvas is below the top bar */
+}
+
+.task-card {
+    position: relative; /* Added position property */
+    background-color: var(--secondary-bg-color);
+    border-radius: 10px;
+    margin: 10px;
+    padding: 15px;
+    width: 400px;
+    height: 180px;
+    color: var(--primary-text-color);
+    cursor: pointer;
+    border: 1px solid #444;
+    transition: background-color 0.3s, transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 14px; /* Adjusted font size */
+    z-index: 0; /* Ensure task cards are below the top bar */
+}
+
+.task-card:hover {
+    background-color: var(--popup-bg-color);
+    transform: scale(1.05);
+}
+
+.task-card h3 {
+    font-size: 16px; /* Adjusted font size */
+    margin: 0 0 10px p;
+}
+
+.task-card p {
+    font-size: 12px; /* Adjusted font size */
+    margin: 5px 0;
+}
+
+.add-task-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #408a43;
+    border: none;
+    color: white; 
+    padding: 15px 32px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px;
+    margin: 4px 2px; 
+    cursor: pointer; 
+    border-radius: 12px; 
+    transition-duration: 0.2s; 
+}
+
+.add-task-btn:hover {
+    background-color: #1e4720;
+}
+
+.task-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--popup-bg-color);
+    padding: 40px;
+    border-radius: 15px; /* Rounded corners */
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle box shadow */
+    z-index: 1004;
+    width: 30vw;
+    max-width: 90%;
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Disable horizontal scrolling */
+    max-height: 95vh; /* Limit the height to 80% of the viewport height */
+}
+
+.popup-content {
+    text-align: center;
+}
+
+.close-popup {
+    background-color: transparent;
+    border: none;
+    color: var(--primary-text-color);
+    font-size: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 0;
+    outline: none; 
+    box-shadow: none; 
+    appearance: none; 
+    transition: color 0.3s ease;
+}
+
+.close-popup:hover {
+    color: red; 
+    background-color: transparent; 
+}
+
+.taskCardContent{
+    margin: 15px;
+    font-family: 'Inter';
+    font-size: large;
+    text-align: center;
+    align-self: center;
+    display: flex;
+    justify-content: center; /* Align text horizontally in the center */
+    align-items: center; /* Align text vertically in the center */
+    border-radius: 12px;
+    transition-duration: 0.4s;
+}
+
+#TaskPriority{
+    width: 100px;
+    height: 20%;
+    position: absolute;
+    bottom: 74px;
+    right: 0px;
+    box-sizing: border-box;
+    font-weight: bold;
+    border-color: hsl(0, 2%, 9%); 
+    border: 3px solid;
+}
+
+#ExtTaskTag1 {
+    margin-top: 10px;
+    color: hsl(0, 2%, 9%);
+    font-weight: bold;
+    width: 100px;
+    height: 35%;
+    text-align: center;
+    align-content: center;
+    font-family: 'Inter';
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid; 
+    border-color: hsl(0, 2%, 9%); 
+}
+
+#ExtTaskTag2 {
+    margin-top: 10px;
+    color: hsl(0, 2%, 9%);
+    width: 100px;
+    height: 35%;
+    text-align: center;
+    align-content: center;
+    font-family: 'Inter';
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid; 
+    border-color: hsl(0, 2%, 9%); 
+}
+
+#ExtTaskTag3 {
+    margin-top: 10px;
+    color: hsl(0, 2%, 9%);
+    width: 100px;
+    height: 35%;
+    text-align: center;
+    align-content: center;
+    font-family: 'Inter';
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid; 
+    border-color: hsl(0, 2%, 9%); 
+}
+
+#TaskTags1 {
+    font-size: medium;
+    color: hsl(0, 0%, 0%);
+    font-weight: bold;
+    width: 96px;
+    height: 20%;
+    position: absolute;
+    bottom: -5px;
+    left: -7px; 
+    box-sizing: border-box;
+    border-color: hsl(0, 2%, 9%); 
+    border: 2px solid; 
+}
+
+#TaskTags2 {
+    font-size: medium;
+    color: hsl(0, 2%, 9%);
+    font-weight: bold;
+    width: 96px;
+    height: 20%;
+    position: absolute;
+    bottom: -5px;
+    left: 95px; 
+    box-sizing: border-box;
+    border-color: hsl(0, 2%, 9%); 
+    border: 2px solid rgb(0, 0, 0); 
+}
+
+#TaskTags3 {
+    font-size: medium;
+    color: hsl(0, 2%, 9%);
+    font-weight: bold;
+    width: 96px;
+    height: 20%;
+    position: absolute;
+    bottom: -5px;
+    left: 195px;
+    box-sizing: border-box;
+    border-color: hsl(0, 2%, 9%); 
+    border: 2px solid rgb(0, 0, 0); 
+}
+
+#ExtraTags{
+    font-size: medium;
+    color: hsl(0, 2%, 9%);
+    font-weight: bold;
+    width: 100px;
+    height: 5%;
+    left: -15px;
+    position: relative;
+    box-sizing: border-box;
+    border-color: hsl(0, 2%, 9%); 
+    border: 2px solid rgb(0, 0, 0); 
+
+}
+
+.condensed-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    width: 100%;
+    justify-content: flex-start;
+    position: absolute;
+    bottom: 0px;
+    left: 5px;
+}
+
+.tag-circle {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    position: relative;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.tag-circle::after {
+    content: attr(title);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: hsl(0, 2%, 9%);
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 3px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.tag-circle:hover {
+    width: 110px;
+    height: 25px;
+    padding: 0 10px;
+    border-radius: 15px;
+}
+
+.tag-circle:hover::after {
+    opacity: 1;
+}
+
+#TaskStoryPoints{
+    width: 40px;
+    height: 20%;
+    position:absolute;
+    bottom: -8px;
+    right: 0px;
+    box-sizing: border-box;
+    border-color: black; 
+    font-weight: bold;
+    border: 3px solid #b0aeae; /* Added border property */
+}
+
+#TaskStatus{
+    width: 115px;
+    height: 20%;
+    position: absolute;
+    top: 0;
+    right: 0px; 
+    box-sizing: border-box;
+    border-color: hsl(0, 2%, 9%); 
+    border: 3px solid;
+    font-weight: bold; 
+}
+
+#TaskStage {
+    display: flex;
+    height: 20%;
+    position: absolute;
+    bottom: 34px;
+    right: 0px; 
+    box-sizing: border-box;
+    border-color: hsl(0, 2%, 9%); 
+    border: 3px solid;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#TaskHeader{
+    width: 250px;
+    font-family: 'Inter';
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: -5px;
+    word-wrap: break-word; /* Added word-wrap property */
+}
+
+#task-form, #member-task-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#task-form label, #member-task-form label {
+    margin-bottom: 5px;
+    text-align: left;
+    color: var(--primary-text-color);
+}
+
+#task-form input, #task-form select, #task-form textarea, #member-task-form input {
+    margin-bottom: 10px;
+    width: 100%;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: var(--popup-input-bg); 
+    color: var(--primary-text-color); 
+    border: 1px solid var(--popup-shadow); 
+    box-sizing: border-box;
+}
+
+#task-form textarea {
+    resize: vertical; 
+}
+
+.inline-label-input, .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.inline-label-input label {
+    width: 150px; 
+    margin-bottom: 0;
+    color: var(--primary-text-color); 
+}
+
+.inline-label-input input,
+.inline-label-input select, .dropdown-toggle {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.popup-content h2 {
+    font-family: 'Inter', sans-serif; 
+    font-size: 24px; 
+    font-weight: bold; 
+    color: var(--primary-text-color); 
+    text-align: center; 
+    margin-bottom: 20px; 
+}
+
+.custom-dropdown {
+    position: relative;
+    margin-right: 10px;
+    margin-top: 10px;
+    display: inline-block;
+    width: 100%;
+}
+
+.dropdown-toggle {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--popup-input-bg);
+    color: var(--primary-text-color);
+    border: 1px solid var(--popup-shadow);
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.dropdown-toggle:hover {
+    background-color: var(--popup-shadow);
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: var(--popup-bg-color);
+    max-width: 90%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.dropdown-menu label {
+    display: flex;
+    align-items: justify;
+    color: var(--primary-text-color);
+    padding: 5px;
+    padding-right: 120px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-right: 0;
+    width: 100%; 
+    gap: 20px;
+}
+
+.dropdown-menu label:hover {
+    background-color: var(--popup-shadow);
+}
+
+.dropdown-menu input[type="checkbox"] {
+    align-items: left;
+    margin-left: 0px;
+    margin-top: 8px;
+    min-width: 100%;
+}
+.show {
+    display: block;
+}
+
+#task-form button[type="submit"], #member-task-form button[type="submit"] {
+    background-color: #007BFF; 
+    border: none; 
+    color: white; 
+    padding: 10px 20px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px; 
+    cursor: pointer;
+    border-radius: 5px; 
+    transition-duration: 0.4s; 
+}
+
+#task-form button[type="save-edits"] {
+    background-color: #007BFF; 
+    border: none; 
+    color: white; 
+    padding: 10px 20px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px; 
+    margin: 10px 0; 
+    cursor: pointer; 
+    border-radius: 5px; 
+    transition-duration: 0.4s; 
+}
+
+#task-form button[type="submit"]:hover {
+    background-color: #0056b3; 
+}
+
+.task-details-popup{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-40%, -50%);
+    background-color: var(--popup-bg-color);
+    padding: 40px;
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle box shadow */
+    z-index: 1000;
+    width: 45%;
+    height: min-content;
+    max-width: 120%;
+    max-height: auto;
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Disable horizontal scrolling */
+    max-height: 90vh; /* Limit the height to 80% of the viewport height */
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(96, 94, 94); 
+    border-radius: 7px;
+    transition: background-color 0.3s ease; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #4c4b4b; 
+  }
+
+#TaskDetailHeader {
+    width: 100%;
+    margin-top: 20px;
+    font-family: 'Inter';
+    font-size: 25px;
+    font-weight: bold;
+    word-wrap: break-word; 
+    color: var(--primary-text-color); 
+}
+
+#TaskDetailHeader strong {
+    display: block; 
+    font-size: 20px; 
+    color: var(--task-text-color); 
+}
+
+#TaskDetailHeader p {
+    margin-top: 5px; 
+    font-size: 25px; 
+    font-weight: bold;
+    color: var(--task-text-color);  
+}
+
+#TaskDetailDesc {
+    width: 100%;
+    margin-top: 10px;
+    font-family: 'Inter';
+    font-size: 18px;
+    font-weight: 300;
+    word-wrap: break-word; 
+    color: var(--primary-text-color); 
+}
+
+#TaskDetailDesc strong {
+    display: block; 
+    font-size: 20px; 
+    color: var(--task-text-color); 
+    font-weight: bold; 
+}
+
+#TaskDetailDesc p {
+    margin-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    border-radius: 10px;
+    border: 2px solid var(--task-text-color);
+    color: var(--task-text-color); 
+}
+
+#assigned-to {
+    width: 100%;
+    margin-top: 10px;
+    font-family: 'Inter';
+    font-size: 18px;
+    word-wrap: break-word; 
+    color: var(--primary-text-color); 
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#assigned-to strong {
+    font-weight: bold; 
+}
+
+#assigned-to p {
+    font-weight: 300;
+    margin: 0; 
+}
+
+.assign-to-me-button {
+    background-color: #007bff; 
+    font-family: 'Inter', sans-serif;
+    font-size: 20px; 
+    font-weight: 500;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    width: auto;
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.assign-to-me-button:hover {
+    background-color: #0056b3; 
+}
+
+#TaskDetailParameters{
+    margin-top: 40px;
+}
+
+#DetailParameterText{
+    width: 100%;
+    font-family: 'Inter';
+    font-size: 22px;
+    font-weight: bold;
+}
+
+#TopParametersRow{
+    width: 100%;
+    display: flex;
+    justify-content: row;
+}
+
+#LeftTop{
+    width: 50%;
+}
+
+#RightTop{
+    position:absolute;  
+    right: -50px;
+    width: 50%;
+}
+
+#BottomParametersRow{
+    width: 100%;
+    display: flex;
+    justify-content: row;
+}
+
+#LeftBottom{
+    width: 50%;
+}
+
+#RightBottom{
+    position:absolute;  
+    right: -50px;
+    width: 50%;
+}
+
+#DetailValue{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding-top: 2px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: min-content;
+    height: 35%;
+    text-align: center;
+    align-content: center;
+    font-family: 'Inter';
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid  ;
+}
+
+.popup-content {
+    text-align: left;
+}
+
+#ExtendStatus{
+    position: relative;
+    margin-top: 24px;
+    margin-bottom: 15px;
+    padding-top: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: auto; 
+    max-width: 50%; 
+    height: 35%;
+    text-align: center;
+    align-content: center;
+    font-family: 'Inter';
+    font-size: 25px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 3px solid hsl(0, 2%, 9%);
+}
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    gap: 10px; 
+    margin-top: 35px; 
+    position: relative; 
+}
+
+.edit-task, .DeleteButton, .show-history-log {
+    position:relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px; 
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 20px; 
+    font-weight: 500;
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.edit-task {
+    width: 20%; 
+    background-color: #007BFF;
+    border: 2px solid #0056b3;
+}
+
+.edit-task i {
+    margin-right: 8px; 
+}
+
+.edit-task:hover {
+    background-color: #0056b3; 
+    border-color: #004494; 
+}
+
+.DeleteButton {
+    width: auto; 
+    background-color: #dc3545;
+    border: 2px solid #c82333; 
+}
+
+.DeleteButton i {
+    margin-right: 8px; 
+}
+
+.DeleteButton:hover {
+    background-color: #a71e2c; 
+    border-color: #bd2130; 
+}
+
+.show-history-log {
+    width: auto;
+    background-color: #28a745; 
+    border: 2px solid #218838; 
+}
+
+.show-history-log i {
+    margin-right: 8px; 
+}
+
+.show-history-log:hover {
+    background-color: #218838; 
+    border-color: #1e7e34; 
+}
+
+.action-buttons-sprint {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    gap: 10px; 
+    margin-top: 20px; 
+    position: relative; 
+    flex-wrap: wrap; 
+}
+
+.remove-from-sprint-backlog, .add-contribution-time, .view-contribution-graph {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px; 
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 20px; 
+    font-weight: 500;
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.remove-from-sprint-backlog {
+    width: auto; 
+    background-color: #dc3545;
+    border: 2px solid #dc3545; 
+}
+
+.remove-from-sprint-backlog i {
+    margin-right: 8px; 
+}
+
+.remove-from-sprint-backlog:hover {
+    background-color: #c82333; 
+    border-color: #c82333; 
+}
+
+.add-contribution-time {
+    width: auto; 
+    background-color: #28a745; 
+    border: 2px solid #28a745; 
+}
+
+.add-contribution-time i {
+    margin-right: 8px; 
+}
+
+.add-contribution-time:hover {
+    background-color: #218838;
+    border-color: #218838;
+}
+
+.view-contribution-graph {
+    width: auto; 
+    background-color: #007bff;
+    border: 2px solid #007bff; 
+}
+
+.view-contribution-graph i {
+    margin-right: 8px; 
+}
+
+.view-contribution-graph:hover {
+    background-color: #0069d9; 
+    border-color: #0069d9; 
+}
+
+.delete-popup {
+    width: 500px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    background-color: var(--popup-bg-color);
+    padding: 40px;
+    border-radius: 15px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    z-index: 1004;
+    max-width: 90%;  
+    display: none;
+}
+
+.delete-popup h2 {
+    text-align: center;
+    font-size: 38px;
+    font-weight: bold;
+    margin: 10px 0 10px;
+}
+
+.delete-popup p {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 20px;
+}
+
+.cancel {
+    background-color: #FFFFFF; 
+    color: #000000; 
+    border: none; 
+    padding: 10px 20px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px; 
+    margin: 4px 2px;
+    cursor: pointer; 
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.cancel:hover {
+    background-color: #808080; 
+}
+
+.delete {
+    background-color: #dc3545; 
+    color: #FFFFFF; 
+    border: none; 
+    padding: 10px 20px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px; 
+    margin: 4px 2px; 
+    cursor: pointer; 
+    border-radius: 15px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.delete:hover {
+    background-color: #8f1a26; 
+}
+
+.delete-buttons {
+    display: flex;
+    justify-content: space-around;
+    height: min-content;
+    margin-top: 40px;
+    padding-left: 20%;
+    padding-right: 20%;
+}
+
+/* History log css */
+.history-log-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-40%, -50%);
+    background-color: var(--popup-bg-color);
+    padding: 40px;
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle box shadow */
+    z-index: 1100;
+    width: 30%;
+    height: min-content;
+    max-width: 120%;
+    max-height: auto;
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Disable horizontal scrolling */
+    max-height: 90vh; /* Limit the height to 80% of the viewport height */
+}
+
+.history-log-popup-content {
+    text-align: left;
+}
+
+.close-history-popup {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 0;
+}
+
+.circle {
+    width: 18px;
+    height: 18px;
+    border: 4px solid black;
+    border-radius: 50%;
+    font-size: 30px;
+    color: #fff;
+    line-height: 50px;
+    text-align: center;
+    background: white;
+    display: block;
+    margin-right: 1em;
+    flex-shrink: 0;
+}
+
+.history-log-entry {
+    display: inline-flex;
+}
+
+.entry {
+    display: inline-flex;
+    align-items: center;
+    margin: auto;
+    padding-top: 10px;
+    padding-left: 50px;
+}
+
+/* 
+=====================================================================================================================
+                                  SPRINT BOARD SECTION STARTS HERE
+===================================================================================================================== 
+*/
+
+.sprint-board {
+    display: none;
+    width: 100%;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: var(--primary-bg-color);
+    padding: 70px 20px 20px 200px; /* Adjust padding to account for the top bar and side bar */
+    z-index: 0; /* Ensure canvas is below the top bar */
+}
+
+.add-sprint-btn{
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #408a43;
+    border: none;
+    color: white; 
+    padding: 15px 32px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px;
+    margin: 4px 2px; 
+    cursor: pointer; 
+    border-radius: 12px; 
+    transition-duration: 0.2s; 
+}
+
+.add-sprint-btn:hover{
+    background-color: #1e4720; /* Dark green background on hover */
+}
+
+.add-sprint-form {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--popup-bg-color);
+    padding: 40px;
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle box shadow */
+    z-index: 1004;
+    width: 400px;
+    max-width: 90%;
+}
+
+.add-sprint-form .popup-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-sprint-form label,
+.add-sprint-form input,
+.add-sprint-form .ant-picker,
+.add-sprint-form .ant-select,
+.add-sprint-form button {
+    margin-bottom: 15px; /* Add space between form elements */
+}
+
+.add-sprint-form button {
+    margin-top: 20px; /* Add extra space before the submit button */
+}
+
+#sprint-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#sprint-form label {
+    margin-bottom: 5px;
+    text-align: left;
+    color: var(--primary-text-color);
+}
+
+#sprint-form input, #sprint-form select, #sprint-form textarea {
+    margin-bottom: 10px;
+    width: 100%;
+    border-radius: 5px;
+    margin-top: 5px;
+    padding: 10px;
+    background-color: var(--popup-input-bg);
+    color: var(--primary-text-color);
+    border: 1px solid var(--popup-shadow);
+}
+
+#sprint-form textarea {
+    resize: vertical; 
+}
+
+#sprint-form button[type="submit"] {
+    background-color: #007bff;
+    border: none;
+    color: #ffffff;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition-duration: 0.4s;
+}
+
+#sprint-form button[type="submit"]:hover {
+    background-color: #0056b3;
+    color: #ffffff; 
+}
+
+.ant-picker {
+    background-color: var(--popup-input-bg) !important;
+    color: var(--primary-text-color) !important;
+}
+
+.ant-picker-input > input {
+    color: var(--primary-text-color) !important;
+}
+
+.ant-picker-input > input::placeholder {
+    color: var(--secondary-text-color) !important;
+}
+
+.ant-picker:hover, .ant-picker-focused {
+    border-color: #40a9ff !important;
+}
+
+.ant-picker-suffix, .ant-picker-clear {
+    color: var(--secondary-text-color) !important;
+}
+
+.ant-picker-separator {
+    color: var(--secondary-text-color) !important;
+}
+
+/* calendar panel */
+.ant-picker-panel {
+    background-color: var(--popup-bg-color) !important;
+}
+
+.ant-picker-cell-out-view .ant-picker-cell-inner {
+    color: #555 !important;
+}
+
+.ant-picker-cell-in-view .ant-picker-cell-inner {
+    color: var(--primary-text-color) !important;
+}
+
+/* Default (dark mode) styles */
+.ant-picker-cell-in-range:not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end)::before {
+    background-color: #2e3b4e !important; /* Dark blue for the streak */
+}
+
+.ant-picker-cell-range-start:not(.ant-picker-cell-range-end)::before,
+.ant-picker-cell-range-end:not(.ant-picker-cell-range-start)::before {
+    background-color: #2e3b4e !important;
+}
+
+.ant-picker-cell-range-start .ant-picker-cell-inner {
+    background-color: #1a73e8 !important;
+    color: var(--primary-text-color) !important;
+}
+
+.ant-picker-cell-range-end .ant-picker-cell-inner {
+    background-color: #1a73e8 !important;
+    color: var(--primary-text-color) !important;
+}
+
+.ant-picker-cell-today .ant-picker-cell-inner::before {
+    border-color: #40a9ff !important;
+}
+
+/* Light mode overrides */
+body.light-mode .ant-picker-cell-in-range:not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end)::before {
+    background-color: #cce5ff !important; /* Light blue for the streak */
+}
+
+body.light-mode .ant-picker-cell-range-start:not(.ant-picker-cell-range-end)::before,
+body.light-mode .ant-picker-cell-range-end:not(.ant-picker-cell-range-start)::before {
+    background-color: #cce5ff !important;
+}
+
+body.light-mode .ant-picker-cell-range-start .ant-picker-cell-inner {
+    background-color: #99ccff !important;
+    color: var(--primary-text-color) !important;
+}
+
+body.light-mode .ant-picker-cell-range-end .ant-picker-cell-inner {
+    background-color: #99ccff !important;
+    color: var(--primary-text-color) !important;
+}
+
+body.light-mode .ant-picker-cell-today .ant-picker-cell-inner::before {
+    border-color: #66b2ff !important;
+}
+
+.ant-picker-header-view button {
+    color: var(--primary-text-color) !important;
+}
+
+.ant-picker-content th {
+    color: var(--primary-text-color) !important;
+}
+
+.ant-picker-header .ant-picker-header-super-prev-btn,
+.ant-picker-header .ant-picker-header-prev-btn,
+.ant-picker-header .ant-picker-header-next-btn,
+.ant-picker-header .ant-picker-header-super-next-btn {
+    color: #979393 !important;
+}
+
+.ant-select-selector {
+    background-color: var(--popup-input-bg) !important;
+    color: var(--primary-text-color) !important;
+    border: 1px solid var(--popup-shadow) !important;
+}
+
+.ant-select-selection-placeholder {
+    color: var(--secondary-text-color) !important;
+}
+
+.ant-select-dropdown {
+    background-color: var(--popup-input-bg) !important;
+    color: var(--primary-text-color) !important;
+}
+
+.ant-select-item-option-content {
+    color: var(--primary-text-color) !important;
+}
+
+.ant-select-item-option-selected {
+    background-color: var(--popup-shadow) !important;
+    color: var(--primary-text-color) !important;
+}
+
+.ant-select-item-option-active {
+    background-color: #666 !important;
+    color: var(--primary-text-color) !important;
+}
+
+.ant-select-arrow, .ant-select-clear, .ant-select-selection-search-icon, .ant-select-selection-item-remove {
+    color: var(--secondary-text-color) !important;
+}
+
+button {
+    background-color: var(--popup-input-bg);
+    color: var(--primary-text-color);
+    border: 1px solid var(--popup-shadow);
+}
+
+button:hover {
+    background-color: var(--popup-shadow);
+    border-color: #666;
+}
+
+/* Below is CSS for Sprint Cards. Feel free to modify it for improvements */
+
+.sprint-card {
+    background-color: #252525;
+    border: 1px solid #444;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 0; /* Ensure task cards are below the top bar */
+    margin: 10px;
+    padding: 15px;
+    width: 600px;
+    height: 180px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.sprint-card:hover {
+    background-color: #333;
+    transform: scale(1.05);
+}
+
+#sprint-card-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+#card-left {
+    width: 50%;
+    height: 100%;
+    padding-left: 10px;
+    text-align: left;
+    letter-spacing: 1px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+#card-right {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#right-top {
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+#right-bottom {
+    width: 100%;
+    height: 30%;
+    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+#date {
+    width: 100%;
+    height: 20%;
+    padding-right: 6%;
+    color: white;
+    letter-spacing: 0.1px;
+    font-family: 'Inter', sans-serif;
+    font-weight: lighter;
+    font-size: small;
+    text-align: right;
+}
+
+#card-status {
+    width: min-content;
+    height: 100%;
+    padding: 5% 10%;
+    border: 2px solid rgba(58, 58, 58, 0.651);
+    border-radius: 10px;
+    background-color: rgb(215, 99, 99);
+    color: rgba(58, 58, 58, 0.651);
+    letter-spacing: 0.5px;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: medium;
+    text-align: center;
+}
+
+#delete-button {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    transform: scale(1.5, 1.5);
+    right: 225px;
+    bottom: 16px;
+    background-color: #dc3545;
+    border: 2px solid #c82333; 
+    border-radius: 5px;
+    transition: background-color 0.3s ease, border-color 0.3s ease; 
+}
+
+#delete-button:hover {
+    background-color: #a71e2c; 
+    border-color: #831924; 
+}
+
+.Sprint-card{
+    position: relative; /* Added position property */
+    background-color: var(--secondary-bg-color);
+    border-radius: 10px;
+    margin: 10px;
+    padding: 15px;
+    width: 99%;
+    height: 180px;
+    color: var(--primary-text-color);
+    cursor: pointer;
+    border: 1px solid #444;
+    transition: background-color 0.3s, transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 14px; /* Adjusted font size */
+    z-index: 0; /* Ensure task cards are below the top bar */
+}
+
+#Members{
+    width:100%;
+    font-weight: Bold;
+    position:absolute;
+    left:10px;
+    bottom:15px;
+}
+
+#SprintPOText{
+    position: absolute;
+    color: var(--primary-text-color);
+    top:100px;
+    left:10px;
+    width: 100%;
+    height: 20%;
+    bottom: 70px;
+    right: 0;
+    box-sizing: border-box;
+    font-weight: bold;
+}
+
+#SprintPO{
+    position:absolute;
+    top:-5px;
+    left:120px;
+    width: 80px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-weight: lighter;
+    font-size: small;
+    padding:4px;
+    border: 2px solid var(--primary-text-color);
+    border-radius: 8px;
+}
+
+#SprintSMText{
+    position: absolute;
+    top:60px;
+    left:10px;
+    width: 100%;
+    height: 20%;
+    bottom: 70px;
+    right: 0;
+    box-sizing: border-box;
+    font-weight: bold;
+    color: var(--primary-text-color);
+}
+
+#SprintSM{
+    position:absolute;
+    top:-5px;
+    left:120px;
+    width: 80px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-weight: lighter;
+    font-size: small;
+    padding:4px;
+    border: 2px solid var(--primary-text-color);
+    border-radius: 8px;
+}
+
+#SprintStoryPoints {
+    position: absolute;
+    bottom: 10px;
+    right: 143px;
+    width: 65px;
+    height: 37px;
+    text-align: center;
+    border: 2px solid var(--primary-text-color);
+    border-radius: 10px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.CondensedMembers {
+    position:absolute;
+    display: flex;
+    gap: 5px;
+    width: 100%;
+    height:30px;
+    justify-content: flex-start;
+    position: absolute;
+    bottom: -10px;
+    left: 120px;
+}
+
+
+.member-circle {
+    position: relative;
+    background-color: var(--primary-text-color);
+    width: 25px;
+    height: 25px;
+    top: -2.5px;
+    border-radius: 50%;
+    position: relative;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.member-circle::after {
+    content: attr(title);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--secondary-bg-color);
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 3px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.member-circle:hover {
+    width: 90px;
+    height: 25px;
+    padding: 0 10px;
+    border-radius: 15px;
+}
+
+.member-circle:hover::after {
+    opacity: 1;
+}
+
+#SprintDate{
+    position:absolute;
+    width:125px;
+    top:15px;
+    right:15px;
+    color: var(--primary-text-color);
+    letter-spacing: 0.1px;
+    font-family: 'Inter', sans-serif;
+    font-weight: lighter;
+    font-size: small;
+    text-align:right;
+}
+
+#SprintStatus{
+    position:absolute;
+    width: 120px;
+    height: 40px;
+    padding: 3px;
+    border: 2px solid rgba(58, 58, 58, 0.651);
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: large;
+    text-align: center;
+    bottom:10px;
+    right:15px;
+}
+
+.Sprint-card:hover {
+    background-color: var(--primary-button-textHover);
+    transform: scale(1.02);
+}
+
+.deleteSprint-popup, .delete-member-popup{
+    width: 500px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--popup-bg-color);
+    padding: 40px;
+    border-radius: 15px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    overflow: hidden;
+    z-index: 1000;
+    max-width: 90%;
+    display: none;
+}
+.deleteSprint-popup h2, .delete-member-popup h2{
+    text-align: center;
+    font-size: 38px;
+    font-weight: bold;
+    margin: 10px 0 10px;
+}
+
+.deleteSprint-popup p, .delete-member-popup p {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 20px;
+}
+/* End of CSS for Sprint Cards */
+
+
+/* Below is CSS for Sprint Backlog. Feel free to modify it for improvements */
+#sprint-backlog {
+    display: none;
+    position: fixed;
+    top: 10%;
+    left: 12%;
+    width: 88%;
+    height: 90%;
+    z-index: 500;
+}
+
+/* Below is CSS for Sprint Kanban View */
+#sprint-backlog-kanban {
+    width: 100%;
+    height: 100%;
+    padding: 2% 1.5% 2% 1.5%;
+    background-color: var(--primary-bg-color);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#backlog-column {
+    width: 32%; 
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--secondary-bg-color); 
+    border-radius: 8px;
+    padding: 1%;
+    border: 3px solid #444; 
+}
+
+#backlog-column-header {
+    width: 100%;
+    height: min-content;
+    padding: 0% 2% 0% 2%; 
+    display: flex;
+    flex-direction: row;
+}
+
+#backlog-column-title {
+    width: 50%;
+    height: 100%;
+    color: var(--primary-text-color);
+    letter-spacing: 0.7px;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: x-large;
+    text-align:left;
+}
+
+#backlog-buttons {
+    width: 50%;
+    height: 100%;
+    gap: 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.task-card-section-not-started,
+.task-card-section-in-progress,
+.task-card-section-completed {
+    width: 100%;
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; 
+    overflow-x: hidden;
+    padding: 1%;
+    background-color: var(--secondary-bg-color); 
+}
+
+.task-card {
+    min-height: 180px; 
+}
+
+.add-sprint-task {
+    width: min-content;
+    height: 94%;
+    padding: 0% 7% 2%;
+    border: none;
+    border-radius: 8px;
+    background-color: #333;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: x-large;
+}
+/* End of CSS for Sprint Kanban View */
+
+/* Below is CSS for Sprint List View */
+#sprint-backlog-list {
+    width: 100%;
+    height: 100%;
+    padding: 2% 5% 0% 5%;  
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    overflow-y: auto; 
+}
+
+#list-header {
+    width: 100%;
+    height: min-content;
+    margin-bottom: 2%;
+    padding-left: 4%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: var(--primary-text-color);
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: x-large;
+    text-align: center;
+}
+
+#name-header {
+    width: 30%;
+    height: 100%;
+    text-align: left;
+}
+
+#priority-header {
+    width: 15%;
+    height: 100%;
+    margin-left: 1.5%;
+    text-align: left;
+}
+
+#stage-header {
+    width: 15%;
+    height: 100%;
+    margin-left: 1.5%;
+    text-align: left;
+}
+
+#status-header {
+    width: 15%;
+    height: 100%;
+    margin-left: 1.5%;
+    text-align: left;
+}
+
+#story-point-header {
+    width: 15%;
+    height: 100%;
+    text-align: center;
+}
+
+#tags-header {
+    width: 40%;
+    height: 100%;
+    margin-left: 2%;
+    text-align: left;
+}
+
+#divider {
+    width: 100%;
+    height: 0.45%;
+    border: none;
+    border-radius: 10px;
+    background-color: #7a7a7a;
+}
+
+#task-card-list {
+    width: 100%;
+    height: min-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-task-card {
+    width: 100%;
+    height: min-content;
+    margin-top: 3%;
+    padding-left: 4%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--primary-text-color);
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: large;
+    border: 1px solid #666; /* Dimmer border color */
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.list-task-name {
+    width: 30%;
+    height: 100%;
+    padding: 1% 0%;
+    text-align: left;
+}
+
+.list-task-priority {
+    width: 15%;
+    height: 100%;
+    margin-left: 1%;
+    padding: 0.5% 0%;
+    border-radius: 10px;
+    font-size: normal;
+    text-align: center;
+}
+
+.list-task-stage {
+    width: 15%;
+    height: 100%; 
+    margin-left: 1%;
+    padding: 0.5% 0%;
+    border-radius: 10px;
+    font-size: normal;
+    text-align: center;
+}
+
+.list-task-status {
+    width: 15%;
+    height: 100%;
+    margin-left: 1%;
+    padding: 0.5% 0%;
+    border-radius: 10px;
+    font-size: normal;
+    text-align: center;
+}
+
+.list-task-story-point {
+    width: 15%;
+    height: 100%;
+    margin-left: 1%;
+    text-align: center;
+}
+
+.list-condensed-tags {
+    width: 40%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: flex-start;
+    padding-left: 33px; /* Move tag circles slightly to the right */
+}
+
+.list-tag-circle {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    position: relative;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.list-tag-circle::after {
+    content: attr(title);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: hsl(0, 2%, 9%);
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 3px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.list-tag-circle:hover {
+    width: 110px;
+    height: 25px;
+    padding: 0 10px;
+    border-radius: 15px;
+}
+
+.list-tag-circle:hover::after {
+    opacity: 1;
+}
+/* End of CSS for Sprint List View */
+
+.sprintEditButton {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    transform: scale(1.5, 1.5);
+    right: 270px;
+    bottom: 16px;
+    background-color: #007BFF;
+    border: 2px solid #0056b3; 
+    border-radius: 5px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.sprintEditButton:hover {
+    background-color: #0056b3;
+    border-color: #004494; 
+}
+
+/* Burndown popup container */
+.burndown-popup {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+/* Burndown chart popup content */
+.burndown-chart-popup {
+    background-color: var(--popup-bg-color); 
+    color: var(--primary-text-color);
+    padding: 20px;
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%; 
+    max-width: 800px; 
+    max-height: 800px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Contribution time popup */
+.contributionTimePopup {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1010;
+}
+
+.contributionTimePopup-content {
+    background-color: var(--popup-bg-color); 
+    color: var(--primary-text-color);
+    padding: 20px;
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%; 
+    max-width: 400px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contributionTimePopup-content h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.contributionTimePopup-content form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contributionTimePopup-content .input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    width: 100%;
+    margin: 10px 0;
+}
+
+.contributionTimePopup-content label {
+    flex: 0 0 auto; 
+    text-align: left;
+    margin-right: 10px;
+}
+
+.contributionTimePopup-content input {
+    flex: 0 0 60px; 
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid var(--popup-shadow);
+    background-color: var(--popup-input-bg);
+    color: var(--primary-text-color);
+    text-align: center; 
+    width: 75px;
+}
+
+.contributionTimePopup-content button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007BFF; 
+    color: #ffffff; 
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+    align-self: center;
+}
+
+.contributionTimePopup-content button:hover {
+    background-color: #0056b3; 
+}
+
+/* Contribution graph popup */
+.contribution-graph-popup {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.contribution-graph-popup-content {
+    background-color: var(--popup-bg-color); 
+    color: var(--primary-text-color);
+    padding: 20px;
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%; 
+    max-width: 800px; 
+    max-height: 800px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Remove Task pop up css */
+.remove-from-sprint-popup {
+    width: 500px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--popup-bg-color);
+    padding: 40px;
+    border-radius: 15px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    z-index: 1004;
+    max-width: 90%;
+    display: none;
+}
+
+.remove-from-sprint-popup h2 {
+    text-align: center;
+    font-size: 38px;
+    font-weight: bold;
+    margin: 10px 0 10px;
+}
+
+.remove-from-sprint-popup p {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 20px;
+}
+
+#add-task-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #408a43;
+    border: none;
+    color: white; 
+    padding: 15px 32px; 
+    text-align: center; 
+    text-decoration: none; 
+    font-size: 16px;
+    margin: 4px 2px; 
+    cursor: pointer; 
+    border-radius: 12px; 
+    transition-duration: 0.2s; 
+    z-index: 1000;
+}
+
+#add-task-button:hover {
+    background-color: #1e4720; 
+}
+
+#AddSprintDone{
+    position: fixed;
+    bottom: 11.5%;
+    right: 8.5%;
+    background-color: #408a43;
+    border: none;
+    color: white; 
+    padding: 15px 32px; 
+    text-align: center; 
+    text-decoration: none; 
+    font-size: 16px;
+    margin: 4px 2px; 
+    cursor: pointer; 
+    border-radius: 12px; 
+    transition-duration: 0.2s; 
+    z-index: 1001;
+}
+
+
+#add-sprint-popup{
+    position:fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--popup-bg-color);
+    padding: 40px;
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle box shadow */
+    z-index: 1001;
+    width: 88%;
+    height:80%;
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Disable horizontal scrolling */
+    max-height: 95vh; /* Limit the height to 80% of the viewport height */
+    flex-wrap: wrap;
+}
+.GiantTick {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    transform: translate(50%, -50%);
+    font-size: 30px;
+    width: 55px;
+    height: 55px;
+    background-color: #18609b;
+    z-index: 1005;
+    border-radius: 50%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.sprint-task-card {
+    position: relative; /* Added position property */
+    background-color: var(--secondary-bg-color);
+    border-radius: 10px;
+    margin: 10px;
+    padding: 15px;
+    width: 400px;
+    height: 180px;
+    color: var(--primary-text-color);
+    cursor: pointer;
+    border: 1px solid #444;
+    transition: background-color 0.3s, transform 0.3s;
+    justify-content: space-between;
+    font-size: 14px; /* Adjusted font size */
+    z-index: 0; /* Ensure task cards are below the top bar */
+}
+
+.sprint-task-card:hover {
+    background-color: var(--popup-bg-color);
+    transform: scale(1.05);
+}
+
+.sprint-task-card h3 {
+    font-size: 16px; /* Adjusted font size */
+    margin: 0 0 10px 0;
+}
+
+.sprint-task-card p {
+    font-size: 12px; /* Adjusted font size */
+    margin: 5px 0;
+}
+
+
+/* Start of CSS for Toggle Button for Sprint Tasks View */
+#toggle-sprint-view {
+    display: none;
+    width: 110px;
+    height: 50px;
+    padding: 2% 3%;
+    cursor: pointer;
+    flex-direction: row;
+    border-radius: 5px;
+    background-color: #333;
+}
+
+#toggle-sprint-view:hover #kanban-view{
+    background-color: #777777;
+}
+
+#toggle-sprint-view.active:hover #list-view{
+    background-color: #777777;
+}
+
+#toggle-sprint-view.active #kanban-view {
+    background-color: transparent;
+    transform: scale(0.9, 0.9);
+}
+
+#toggle-sprint-view.active #list-view {
+    background-color: #575757;
+    transform: scale(1, 1);
+}
+
+#kanban-view {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    padding: 2% 3%;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 3px;
+    background-color: #575757;
+    transition: all 0.2s;
+}
+
+#list-view {
+    width: 50%;
+    height: 100%;
+    transform: scale(0.9, 0.9);
+    padding: 5.5% 7%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 3px;
+    background-color: transparent;
+    transition: all 0.2s;
+}
+
+#task-columns {
+    width: 20%;
+    height: 80%;
+    background-color: #CFCFCF;
+}
+
+#list-rows {
+    width: 100%;
+    height: 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#square {
+    width: 20%;
+    height: 100%;
+    background-color: #CFCFCF;    
+}
+
+#rectangle {
+    width: 70%;
+    height: 100%;
+    background-color: #CFCFCF;    
+}
+
+.assign-task-popup {
+    display: none;
+    z-index: 2000;
+}
+
+/* Admin dashboard styling here */
+.admin-dashboard {
+    flex-grow: 1;
+    display: none;
+    flex-wrap: wrap;
+    padding: 40px; /* Adjust padding to account for the top bar and side bar */
+    overflow-y: auto;
+    background-color: var(--primary-bg-color);
+    z-index: 0; /* Ensure canvas is below the top bar */
+    position: fixed;
+    top: 10%;
+    left: 12%;
+    width: 88%;
+    height: 90%;
+    z-index: 500;
+}
+
+.add-new-member-btn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #408a43;
+    border: none;
+    color: white; 
+    padding: 15px 32px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px;
+    margin: 4px 2px; 
+    cursor: pointer; 
+    border-radius: 12px; 
+    transition-duration: 0.2s; 
+    z-index: 3000;
+}
+
+.add-new-member-btn:hover {
+    background-color: #1e4720; /* Dark green background on hover */
+}
+
+#MembersTable{
+    background-color: var(--popup-bg-color);
+    padding:20px;
+    border-radius: 8px;
+    border: 3px solid var(--popup-input-bg);
+    width:97%;
+}
+
+
+#MembersTableHeader{
+    background-color: var(--dashboard-bg-color);
+    width: 100%;
+    height: 50px;
+    margin-bottom: 2%;
+    padding-left: 4%;
+    padding-right: 8%;
+    padding-top:4%;
+    padding-bottom:4%;
+    display: flex;
+    flex-direction: row;
+    color: var(--primary-text-color);
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: x-large;
+    text-align: center;
+    align-items: center;
+    border-radius: 8px;
+}
+
+.sort-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-right: 10px;
+    color: var(--primary-text-color);
+}
+
+.sort-button i {
+    font-size: 20px;
+    color: var(--primary-text-color);
+}
+
+.MembersTableTitleName{
+    position:relative;
+    width: 20%;
+    left:0%;
+}
+
+.MembersTableTitlePassword{
+    position: relative;
+    width: 25%;
+    left: 7%;
+    transition: all 0.2s ease-in-out;
+}
+
+#admin-dashboard.active .MembersTableTitlePassword {
+    left: 11.5%;
+}
+
+.member-username{
+    position:relative;
+    width: 100px;
+    left:6%;
+}
+
+.member-password{
+    position:relative;
+    width: 35%;
+    left:24%;
+    background-color: var(--password-bg-color);
+    padding-left: 3%;
+    padding-top:1%;
+    padding-bottom:1%;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+}
+
+#admin-dashboard.active .member-password {
+    width: min-content;
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+.memberCard{
+    width: 100%;
+    height: 25px;
+    margin-bottom: 2%;
+    padding-left: 8%;
+    padding-right: 8%;
+    padding-top:4%;
+    padding-bottom:4%;
+    display: flex;
+    flex-direction: row;
+    color: var(--primary-text-color);
+    font-family: 'Inter', sans-serif;
+    font-weight: normal;
+    font-size: x-large;
+    text-align: start;
+    align-items: center;
+    border-radius: 8px;
+    border-bottom: 3px solid var(--primary-bg-color);
+}
+
+#viewPassword{
+    position:relative;
+    height:80%;
+    width: 20%;
+    left:0%;
+    z-index: 1004;
+}
+
+.action-buttonsMember{
+    display: flex;
+    flex-direction: row;
+    position:relative;
+    height:min-content;
+    width: 20%;
+    right:-35%;
+    top:10%;
+    z-index: 1004;
+    gap: 40px;
+    text-align: center;
+}
+
+.edit-taskM, .DeleteButtonM, .show-history-logM {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 7px; 
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 20px; 
+    font-weight: 500;
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    height: min-content;
+    line-height: 1; /* Ensures text is vertically centered */
+}
+
+.edit-taskM {
+    width: 20%; 
+    background-color: #007BFF;
+    border: 2px solid #0056b3;
+}
+
+.edit-taskM i {
+    margin-right: 8px;
+}
+
+.edit-taskM:hover {
+    background-color: #0056b3; 
+    border-color: #004494; 
+}
+
+.DeleteButtonM {
+    width: 18%;  
+    background-color: #dc3545;
+    border: 2px solid #c82333; 
+}
+
+.DeleteButtonM i {
+    margin-right: 8px; 
+}
+
+.DeleteButtonM:hover {
+    background-color: #a71e2c; 
+    border-color: #bd2130; 
+}
+
+.show-history-logM {
+    width: 20%; 
+    background-color: #28a745; 
+    border: 2px solid #218838; 
+}
+
+.show-history-logM i {
+    margin-right: 8px; 
+}
+
+.show-history-logM:hover {
+    background-color: #218838; 
+    border-color: #1e7e34; 
+}
+
+/* CSS for Popup for Editing Members */
+
+.edit-member-popup {
+    display: none;
+    width: 30%;
+    padding: 3%;
+    height: min-content;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-40%, -50%);
+    border-radius: 15px;
+    background-color: var(--popup-bg-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle box shadow */
+    overflow: hidden;
+    z-index: 2000;
+}
+
+#edit-popup-content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#edit-popup-title {
+    height: min-content;
+    margin-bottom: 2%;
+    color: var(--primary-text-color);
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: x-large;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#edit-member-form {
+    height: min-content;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#edit-password {
+    padding: 3%;
+    border: 1px solid rgba(128, 128, 128, 0.221);
+    border-radius: 8px;
+    background-color: var(--secondary-bg-color);
+}
+
+#save-edit-changes {
+    padding: 3%;
+    border-radius: 8px;
+    background-color: #007BFF;
+}
+
+/* End of CSS for Popup for Editing Members */
+
+/* CSS for Popup for Members Bar Chart */
+
+#bar-chart-member {
+    width: 50%;
+    height: min-content;
+    padding: 2% 5% 1.5%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-40%, -50%);
+    display: none;
+    flex-direction: column;
+    gap: 35px;
+    border: none;
+    border-radius: 15px;
+    background-color: var(--popup-bg-color); 
+    color: var(--primary-text-color);
+    z-index: 2000;
+}
+
+#close-bar-chart {
+    width: min-content;
+    height: min-content;
+    position: absolute;
+    top: 4%;
+    right: 5%;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: normal;
+    font-weight: bold;
+}
+
+#close-bar-chart:hover {
+    color: red; 
+    background-color: transparent; 
+}
+
+#header {
+    width: 100%;
+    height: 20%;
+    color: white;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: x-large;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+#footer {
+    width: 100%;
+    height: 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 4%;
+}
+
+#color-box {
+    width: 45%;
+    height: min-content;
+    display: flex;
+    justify-content: right;
+}
+
+#box {
+    width: 15px;
+    height: 15px;
+    border: 1px solid lightblue;
+    background-color: blue;
+}
+
+#title {
+    width: 45%;
+    height: min-content;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: medium;
+    font-weight: bold;
+}
+
+#chart {
+    width: 100%;
+    height: 60vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1.8%;
+}
+
+#y-axis {
+    width: min-content;
+    height: 93%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: small;
+    font-weight: lighter;
+}
+
+#chart-body {
+    width: 95%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#bar-chart {
+    width: 100%;
+    height: 93%;
+    padding-left: 2%;
+    border: 3px solid lightblue;
+    border-top: none;
+    border-right: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: end;
+}
+
+#x-axis {
+    width: 100%;
+    height: min-content;
+    padding-left: 2%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: small;
+    font-weight: lighter;
+}
+
+.bar {
+    height: 10vh;
+    width: 1vw;
+    background-color: blue;
+}
+
+/* End of CSS for Popup for Members Bar Chart */
+
+.search{
+    border : 2px solid var(--primary-text-color);
+    border-radius: 10px;
+    padding: 5px;
+    position: relative;
+    left: 24%;
+    color: var(--primary-text-color);
+}
+
+#search{
+    padding-left: 10px;
+    background-color: var(--popup-bg-color);
+    font-weight: lighter;
+}
+
+/* CSS for button to view average contribution time of members */
+
+#view-avg-contribution-button {
+    display: none;
+    width: 120%;
+    height: 95%;
+    position: relative;
+    right: 25%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: medium;
+    font-weight: normal;
+    transition: all 0.2s ease-in-out;
+}
+
+#view-avg-contribution-button:hover {
+    background-color: #555;
+}
+
+#view-avg-contribution-button.active{
+    width: 140%;
+    height: 95%;
+    right: 43%;
+    background-color: #408a43;
+}
+
+/* End of CSS for button to view average contribution time of members */
+
+/* CSS for popup to set period for average contribution */
+
+#contribution-time-popup {
+    width: 35%;
+    height: 50%;
+    padding: 3%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    flex-direction: column;
+    justify-content: flex-start; 
+    border: none;
+    border-radius: 15px;
+    background-color: var(--popup-bg-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    overflow: hidden;
+    z-index: 1000;
+}
+
+#contribution-time-popup-title {
+    width: 100%;
+    height: min-content;
+    color: var(--primary-text-color);
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    font-size: xx-large;
+    font-weight: bold;
+    margin-bottom: 20px; 
+}
+
+
+#set-contribution-period {
+    width: 100%; 
+    height: 40px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: large;
+    font-weight: bold;
+    background-color: #007BFF;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; 
+}
+
+#set-contribution-period:hover {
+    background-color: #0056b3; 
+    transform: scale(1.05); 
+}
+
+/* End of CSS for popup to set period for average contribution */

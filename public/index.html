@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <link href="tailwind-output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <span class="logo">TaskFlow</span>
+        </div>
+        <div class="sidebar-options">
+            <ul class="nav-menu">
+                <li>
+                    <button class="menu-item menu-item-backlog" onclick="showProductBacklog()">
+                        <i class="fas fa-clock icon-spacing"></i> Backlog
+                    </button>
+                </li>
+                <li>
+                    <button class="menu-item menu-item-sprintboard" onclick="showSprintBoard()">
+                        <i class="fas fa-clipboard icon-spacing"></i> SprintBoard
+                    </button>
+                </li>
+                <li>
+                    <button class="menu-item menu-item-admin-dashboard" onclick="showAdminDashboard()">
+                        <i class="fas fa-users icon-spacing"></i> Dashboard
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="dropdown">
+                <button class="top-bar-button">
+                    <i class="fas fa-sort"></i> Sort
+                </button>
+                <div class="dropdown-content" id="sort-dropdown">
+                    <a href="#" onclick="sortTasks('date-asc')">Date Ascending</a>
+                    <a href="#" onclick="sortTasks('date-desc')">Date Descending</a>
+                    <a href="#" onclick="sortTasks('priority-asc')">Priority Ascending</a>
+                    <a href="#" onclick="sortTasks('priority-desc')">Priority Descending</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button class="top-bar-button">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+                <div class="dropdown-content" id="filter-dropdown">
+                    <label><input type="checkbox" value="Frontend" onchange="updateFilters()"> Frontend</label>
+                    <label><input type="checkbox" value="Backend" onchange="updateFilters()"> Backend</label>
+                    <label><input type="checkbox" value="UI" onchange="updateFilters()"> UI</label>
+                    <label><input type="checkbox" value="UX" onchange="updateFilters()"> UX</label>
+                    <label><input type="checkbox" value="Database" onchange="updateFilters()"> Database</label>
+                    <label><input type="checkbox" value="API" onchange="updateFilters()"> API</label>
+                    <label><input type="checkbox" value="Testing" onchange="updateFilters()"> Testing</label>
+                    <label><input type="checkbox" value="Framework" onchange="updateFilters()"> Framework</label>
+                </div>
+            </div>
+
+            <button id="burndown-chart-button" class="top-bar-button" style="display: none;">
+                <i class="fas fa-chart-bar"></i> Burndown Chart
+            </button>
+
+            <button id="log-out-button" class="top-bar-button" onclick="logOut()">
+                <i class="fas fa-sign-out-alt"></i> Log out
+            </button>
+
+            <div id="toggle-sprint-view" class="toggle-sprint-view">
+                <div id="kanban-view">
+                    <div id="task-columns"></div>
+                    <div id="task-columns"></div>
+                    <div id="task-columns"></div>
+                </div>
+                <div id="list-view">
+                    <div id="list-rows">
+                        <div id="square"></div>
+                        <div id="rectangle"></div>
+                    </div>
+                    <div id="list-rows">
+                        <div id="square"></div>
+                        <div id="rectangle"></div>
+                    </div>
+                    <div id="list-rows">
+                        <div id="square"></div>
+                        <div id="rectangle"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class = "view-avg-contribution-time" id = "view-avg-contribution-time">
+                <button id = "view-avg-contribution-button" onclick = "openContributionTimePopup()">
+                </button>
+            </div>
+
+            <!-- light mode btn -->
+            <div class="light-mode-button">
+                <label for="toggleButton">
+                    <input type="checkbox" id="toggleButton">
+                    <div class="switch"></div>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div id="canvas" class="canvas">
+        <!-- Task cards will be inserted here dynamically -->
+    </div>
+
+    <!-- To dim background layers when pop up appears-->
+    <div class="overlay" id="overlay"></div>
+    <div class="popupoverlay" id="popupoverlay"></div>
+
+    <button class="add-task-btn" onclick="openTaskForm()">+ Add Task</button>
+
+    <div class="task-popup" id="task-popup">
+        <div class="popup-content">
+            <button class="close-popup" onclick="closeTaskForm()">x</button>
+            <h2>Add New Task</h2>
+            <form id="task-form">
+                <label for="task-name">Task Name</label>
+                <input type="text" id="task-name" required>
+    
+                <label for="task-desc">Task Description</label>
+                <textarea id="task-desc" required></textarea>
+
+                <div class="inline-label-input">
+                    <label for="tags">Tags</label>
+                    <div class="custom-dropdown">
+                        <button type="button" class="dropdown-toggle" onclick="toggleDropdown('tags-dropdown')">Select Tags</button>
+                        <div class="dropdown-menu" id="tags-dropdown">
+                            <label class="checkbox-container"><input type="checkbox" value="Frontend" onclick="updateTags(this, 'tags')"><span>Frontend</span></label>
+                            <label class="checkbox-container"><input type="checkbox" value="Backend" onclick="updateTags(this, 'tags')"><span>Backend</span></label>
+                            <label class="checkbox-container"><input type="checkbox" value="UI" onclick="updateTags(this, 'tags')"><span>UI</span></label>
+                            <label class="checkbox-container"><input type="checkbox" value="UX" onclick="updateTags(this, 'tags')"><span>UX</span></label>
+                            <label class="checkbox-container"><input type="checkbox" value="Database" onclick="updateTags(this, 'tags')"><span>Database</span></label>
+                            <label class="checkbox-container"><input type="checkbox" value="API" onclick="updateTags(this, 'tags')"><span>API</span></label>
+                            <label class="checkbox-container"><input type="checkbox" value="Testing" onclick="updateTags(this, 'tags')"><span>Testing</span></label>
+                            <label class="checkbox-container"><input type="checkbox" value="Framework" onclick="updateTags(this, 'tags')"><span>Framework</span></label>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="inline-label-input">
+                    <label for="priority">Priority</label>
+                    <select id="priority" required>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Important">Important</option>
+                        <option value="Urgent">Urgent</option>
+                    </select>
+                </div>
+    
+                <div class="inline-label-input">
+                    <label for="story-points">Story Points</label>
+                    <input type="number" id="story-points" min="1" max="10" required>
+                </div>
+    
+                <div class="inline-label-input">
+                    <label for="Type">Type</label>
+                    <select id="Type" required>
+                        <option value="Story">Story</option>
+                        <option value="Bug">Bug</option>
+                    </select>
+                </div>
+    
+                <div class="inline-label-input">
+                    <label for="Status">Status</label>
+                    <select id="Status" required>
+                        <option value="Not Started">Not Started</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+
+                <div class="inline-label-input">
+                    <label for="Stage">Stage</label>
+                    <select id="Stage" required>
+                        <option value="Planning">Planning</option>
+                        <option value="Development">Development</option>
+                        <option value="Testing">Testing</option>
+                        <option value="Integration">Integration</option>
+                    </select>
+                </div>
+    
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- This is the detailed task card view -->
+    <div class="task-details-popup" id="task-details-popup">
+        <div class="popup-content">
+            <button class = "close-popup" onclick="closeDetailedTaskCard()">×</button>
+            <div class = "task-details-content" id="task-details-content"></div>
+        </div>
+    </div>
+
+    <!-- This is the history log div -->
+    <div class="history-log-popup" id="history-log-popup">
+        <div class="history-log-popup-content">
+            <button class="close-history-popup" id="close-history-popup" onclick="closeHistoryLog()">×</button>
+            <div class="history-log-content" id="history-log-content"></div>
+        </div>
+    </div>
+
+    <!-- This is the edit task form -->
+    <div class="task-popup" id="edit-task-popup">
+        <div class="popup-content">
+            <button class="close-popup" onclick="closeEditTaskForm()">×</button>
+            <h2>Edit Task</h2>
+            <form id="task-form">
+                <label for="edit-task-name">Task Name</label>
+                <input type="text" id="edit-task-name" required>
+    
+                <label for="edit-task-desc">Task Description</label>
+                <textarea id="edit-task-desc" required></textarea>
+    
+                <div class="inline-label-input">
+                    <label for="edit-tags">Tags</label>
+                    <div class="custom-dropdown">
+                        <button type="button" class="dropdown-toggle" onclick="toggleDropdown('edit-tags-dropdown')">Select Tags</button>
+                        <div class="dropdown-menu" id="edit-tags-dropdown">
+                            <label class="checkbox-container"><input id="frontend-checkbox" type="checkbox" value="Frontend" onclick="updateTags(this, 'edit-tags')"><span>Frontend</span></label>
+                            <label class="checkbox-container"><input id="backend-checkbox" type="checkbox" value="Backend" onclick="updateTags(this, 'edit-tags')"><span>Backend</span></label>
+                            <label class="checkbox-container"><input id="ui-checkbox" type="checkbox" value="UI" onclick="updateTags(this, 'edit-tags')"><span>UI</span></label>
+                            <label class="checkbox-container"><input id="ux-checkbox" type="checkbox" value="UX" onclick="updateTags(this, 'edit-tags')"><span>UX</span></label>
+                            <label class="checkbox-container"><input id="database-checkbox" type="checkbox" value="Database" onclick="updateTags(this, 'edit-tags')"><span>Database</span></label>
+                            <label class="checkbox-container"><input id="api-checkbox" type="checkbox" value="API" onclick="updateTags(this, 'edit-tags')"><span>API</span></label>
+                            <label class="checkbox-container"><input id="testing-checkbox"type="checkbox" value="Testing" onclick="updateTags(this, 'edit-tags')"><span>Testing</span></label>
+                            <label class="checkbox-container"><input id="framework-checkbox" type="checkbox" value="Framework" onclick="updateTags(this, 'edit-tags')"><span>Framework</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inline-label-input">
+                    <label for="edit-priority">Priority</label>
+                    <select id="edit-priority">
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Important">Important</option>
+                        <option value="Urgent">Urgent</option>
+                    </select>
+                </div>
+    
+                <div class="inline-label-input">
+                    <label for="edit-story-points">Story Points</label>
+                    <input type="number" id="edit-story-points" min="1" max="10" required>
+                </div>
+    
+                <div class="inline-label-input">
+                    <label for="edit-Type">Type</label>
+                    <select id="edit-Type" required>
+                        <option value="Story">Story</option>
+                        <option value="Bug">Bug</option>
+                    </select>
+                </div>
+    
+                <div class="inline-label-input">
+                    <label for="edit-status">Status</label>
+                    <select id="edit-status" required>
+                        <option value="Not Started">Not Started</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+
+                <div class="inline-label-input">
+                    <label for="edit-stage">Stage</label>
+                    <select id="edit-stage" required>
+                        <option value="Planning">Planning</option>
+                        <option value="Development">Development</option>
+                        <option value="Testing">Testing</option>
+                        <option value="Integration">Integration</option>
+                    </select>
+                </div>
+    
+                <button type="submit" id="save-edits-button">Save Edits</button>
+            </form>
+        </div>
+    </div>
+    
+<!-- 
+=====================================================================================================================
+                                  SPRINT BOARD SECTION STARTS HERE
+=====================================================================================================================
+-->
+    <div id="sprint-board" class="sprint-board">
+        <!-- Task sprints will be inserted here dynamically -->
+    </div>
+
+    <button class="add-sprint-btn" id="add-sprint-btn" onclick='openAddSprintForm()'>+ Add Sprint</button>
+
+    <!--Below is the html for sprint backlog-->
+    <div class = "sprint-backlog" id = "sprint-backlog">
+
+        <!--Below is the html for sprint kanban view-->
+        <div id = "sprint-backlog-kanban">
+            <div id = "backlog-column"> 
+                <div id = "backlog-column-header">
+                    <div id = "backlog-column-title"> Not Started </div>
+                    <div id = "backlog-buttons">
+                        <div class="dropdown">
+                            <button class="top-bar-button">
+                                <i class="fas fa-sort"></i>
+                            </button>
+                            <div class="dropdown-content" id="sort-dropdown">
+                                <a href="#" onclick="sortBacklogTasks('priority-asc','Not Started')">Priority Ascending</a>
+                                <a href="#" onclick="sortBacklogTasks('priority-desc','Not Started')">Priority Descending</a>
+                            </div>
+                        </div>
+                        <div class = "dropdown">
+                            <button class = "top-bar-button">
+                                <i class = "fas fa-filter"></i>
+                            </button>
+                            <div class="dropdown-content" id="filter-dropdown">
+                                <label><input type="checkbox" value="Frontend" onchange="updateBacklogFilters('Not Started')"> Frontend</label>
+                                <label><input type="checkbox" value="Backend" onchange="updateBacklogFilters('Not Started')"> Backend</label>
+                                <label><input type="checkbox" value="UI" onchange="updateBacklogFilters('Not Started')"> UI</label>
+                                <label><input type="checkbox" value="UX" onchange="updateBacklogFilters('Not Started')"> UX</label>
+                                <label><input type="checkbox" value="Database" onchange="updateBacklogFilters('Not Started')"> Database</label>
+                                <label><input type="checkbox" value="API" onchange="updateBacklogFilters('Not Started')"> API</label>
+                                <label><input type="checkbox" value="Testing" onchange="updateBacklogFilters('Not Started')"> Testing</label>
+                                <label><input type="checkbox" value="Framework" onchange="updateBacklogFilters('Not Started')"> Framework</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-card-section-not-started" id="task-card-section" ondrop="drop(event,'.task-card-section-not-started')" ondragover="allowDrop(event)">
+                    <!--Insert task cards here-->
+                </div>
+            </div>
+            <div id = "backlog-column">
+                <div id = "backlog-column-header">
+                    <div id = "backlog-column-title"> In Progress </div>
+                    <div id = "backlog-buttons">
+                        <div class="dropdown">
+                            <button class="top-bar-button">
+                                <i class="fas fa-sort"></i>
+                            </button>
+                            <div class="dropdown-content" id="sort-dropdown">
+                                <a href="#" onclick="sortBacklogTasks('priority-asc','In Progress')">Priority Ascending</a>
+                                <a href="#" onclick="sortBacklogTasks('priority-desc','In Progress')">Priority Descending</a>
+                            </div>
+                        </div>
+                        <div class = "dropdown">
+                            <button class = "top-bar-button">
+                                <i class = "fas fa-filter"></i>
+                            </button>
+                            <div class="dropdown-content" id="filter-dropdown">
+                                <label><input type="checkbox" value="Frontend" onchange="updateBacklogFilters('In Progress')"> Frontend</label>
+                                <label><input type="checkbox" value="Backend" onchange="updateBacklogFilters('In Progress')"> Backend</label>
+                                <label><input type="checkbox" value="UI" onchange="updateBacklogFilters('In Progress')"> UI</label>
+                                <label><input type="checkbox" value="UX" onchange="updateBacklogFilters('In Progress')"> UX</label>
+                                <label><input type="checkbox" value="Database" onchange="updateBacklogFilters('In Progress')"> Database</label>
+                                <label><input type="checkbox" value="API" onchange="updateBacklogFilters('In Progress')"> API</label>
+                                <label><input type="checkbox" value="Testing" onchange="updateBacklogFilters('In Progress')"> Testing</label>
+                                <label><input type="checkbox" value="Framework" onchange="updateBacklogFilters('In Progress')"> Framework</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-card-section-in-progress" id="task-card-section" ondrop="drop(event,'.task-card-section-in-progress')" ondragover="allowDrop(event)">
+                    <!--Insert task cards here-->
+                </div>
+            </div>
+            <div id = "backlog-column">
+                <div id = "backlog-column-header">
+                    <div id = "backlog-column-title"> Completed </div>
+                    <div id = "backlog-buttons">
+                        <div class="dropdown">
+                            <button class="top-bar-button">
+                                <i class="fas fa-sort"></i>
+                            </button>
+                            <div class="dropdown-content" id="sort-dropdown">
+                                <a href="#" onclick="sortBacklogTasks('priority-asc','Completed')">Priority Ascending</a>
+                                <a href="#" onclick="sortBacklogTasks('priority-desc','Completed')">Priority Descending</a>
+                            </div>
+                        </div>
+                        <div class = "dropdown">
+                            <button class = "top-bar-button">
+                                <i class = "fas fa-filter"></i>
+                            </button>
+                            <div class="dropdown-content" id="filter-dropdown">
+                                <label><input type="checkbox" value="Frontend" onchange="updateBacklogFilters('Completed')"> Frontend</label>
+                                <label><input type="checkbox" value="Backend" onchange="updateBacklogFilters('Completed')"> Backend</label>
+                                <label><input type="checkbox" value="UI" onchange="updateBacklogFilters('Completed')"> UI</label>
+                                <label><input type="checkbox" value="UX" onchange="updateBacklogFilters('Completed')"> UX</label>
+                                <label><input type="checkbox" value="Database" onchange="updateBacklogFilters('Completed')"> Database</label>
+                                <label><input type="checkbox" value="API" onchange="updateBacklogFilters('Completed')"> API</label>
+                                <label><input type="checkbox" value="Testing" onchange="updateBacklogFilters('Completed')"> Testing</label>
+                                <label><input type="checkbox" value="Framework" onchange="updateBacklogFilters('Completed')"> Framework</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-card-section-completed" id="task-card-section" ondrop="drop(event,'.task-card-section-completed')" ondragover="allowDrop(event)">
+                    <!--Insert task cards here-->
+                </div>
+            </div>
+        </div>
+        <!--Above is the html for sprint kanban view-->
+
+        <!--Below is the html for sprint list view-->
+        <div id = "sprint-backlog-list">
+            <div id = "list-header">
+                <div id = "name-header"> Name </div>
+                <div id = "priority-header"> Priority </div>
+                <div id = "stage-header"> Stage </div>
+                <div id = "status-header"> Status </div>
+                <div id = "story-point-header"> Story Point </div>
+                <div id = "tags-header"> Tags </div>
+            </div>
+            <div id = "divider"></div>
+            <div id = "task-card-list">
+                <!--Task cards are inserted here dynamically-->
+            </div>
+        </div>
+        <!--Above is the html for sprint list view-->
+    </div>
+
+    <!-- This is for the add task button in the sprint kanban view -->
+    <button id="add-task-button" style="display:none;"><i class="fa fa-plus" aria-hidden="true"></i> Transfer Tasks</button>
+
+    <div id="add-sprint-popup" style="display:none;"></div><button id="AddSprintDone" style="display:none;">DONE</button>
+
+    <div id="burndown-chart-popup" class="burndown-popup" style="display: none;">
+        <div class="burndown-chart-popup">
+            <span class="close-popup" onclick="closeBurndownChartPopup()">&times;</span>
+            <canvas id="burndownChart"></canvas>
+        </div>
+    </div>
+
+    <div id="contributionTimePopup" class="contributionTimePopup" style="display: none;">
+        <div class="contributionTimePopup-content">
+            <span class="close-popup" onclick="closeContributionTimePopup()">&times;</span>
+            <h2>Add Contribution Time</h2>
+            <form id="contribution-form">
+                <div class="input-group">
+                    <label for="hours">Hours:</label>
+                    <input type="number" id="hours" name="hours" min="0" value="0" required>
+                </div>
+                <div class="input-group">
+                    <label for="minutes">Minutes:</label>
+                    <input type="number" id="minutes" name="minutes" min="0" max="59" value="0" required>
+                </div>
+                <button type="submit" id="submitContributionTime">Submit</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="contribution-graph-popup" class="contribution-graph-popup" style="display: none;">
+        <div class="contribution-graph-popup-content">
+            <span class="close-popup" onclick="closeContributionGraphPopup()">&times;</span>
+            <canvas id="contributionGraph" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- Assign to task confirmation pop up -->
+     <div class="task-popup" id="assign-task-popup">
+        <div class="popup-content">
+            <button class="close-popup" onclick="closeAssignTaskPopUp()">×</button>
+            <h2>Done!</h2>
+            <p>Task successfully assigned!</p>
+        </div>
+     </div>
+
+    <div id="react-root"></div>
+    <div id="contribution-time-root"></div>
+    <script src="dist/bundle.js"></script>
+
+<!--
+=====================================================================================================================
+                                  Admin Dashboard SECTION STARTS HERE
+=====================================================================================================================
+-->
+
+    <div id="admin-dashboard" class="admin-dashboard">
+        <!-- This will be a placeholder for the admin dashboard -->
+        <div id="MembersTable">
+            <div id="MembersTableHeader">
+                <button class="sort-button" onclick="sortMembers('up')">
+                    <i class="fas fa-sort-alpha-down"></i>
+                </button>
+                <button class="sort-button" onclick="sortMembers('down')">
+                    <i class="fas fa-sort-alpha-up"></i>
+                </button>
+                <div class="MembersTableTitleName"> Members </div>
+                <div class="MembersTableTitlePassword"></div>
+                <div class="search">
+                    <input type="search" id="search" placeholder='Search' data-search>    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="add-new-member-btn" onclick="openAddNewMemberForm()">+ Add New Member</button>
+
+    <div class="task-popup" id="add-new-member-form">
+        <div class="popup-content">
+            <button class="close-popup" onclick="closeAddNewMemberForm()">x</button>
+            <h2>Add New Member</h2>
+            <form id="member-task-form">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+    
+                <label for="password">Password</label>
+                <input type="text" id="password" required>
+
+                <button type="submit" id="add-new-member-btn">Add Member</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- This will be the UI for form for editing members -->
+    <div class = "edit-member-popup" id = "edit-member-popup">
+        <div id = "edit-popup-content">
+            <button class = "close-popup" onclick = "closeEditMemberPopup()"> x </button>
+            <div id = "edit-popup-title"> Edit Member </div>
+            <form id = "edit-member-form">
+                <label for = "edit-password"> Password </label>
+                <input type = "text" id = "edit-password" required>
+                <button type = "submit" id = "save-edit-changes"> Save Changes </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- This will be the UI for the bar chart pop up for individual members -->
+    <div id="bar-chart-member" style="display: none;">
+        <button class = "close-popup" onclick = "closeBarChartPopup()"> x </button>
+        <canvas id="barChart"></canvas>
+    </div>
+
+</body>
+</html>
