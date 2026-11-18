@@ -60,13 +60,13 @@ public/
 src/input.css       Tailwind entry point
 ```
 
-## Known limitations
+## Notes and future work
 
-This was a coursework project, so some shortcuts were taken that should be addressed before any real-world use:
+This is a coursework prototype, and the accounts in its Firestore database are demo data only. Before real-world use, the following would be worth improving:
 
-- Member passwords are stored as plain text in Firestore. A production version should use Firebase Authentication or salted password hashing.
-- Firestore security rules should be locked down; the client currently has broad access.
-- There are no automated tests.
+- Replace the custom login (credentials stored in Firestore) with Firebase Authentication.
+- Tighten Firestore security rules and enforce role-based access for admin features.
+- Add automated tests.
 
 ## Team
 
